@@ -37,11 +37,10 @@ function isPunchPage() {
 function getPunchForm() {
     GM_log("--> getPunchForm()");
 
-    var forms = document.forms;
-    for (var i = 0; i < forms.length; i++) {
-        var f = forms[i];
+    for (var i = 0; i < document.forms.length; i++) {
+        var f = document.forms[i];
         if (f.name.indexOf("win0") == 0) {
-            return f.name;
+            return f;
         }
     }
 
@@ -54,6 +53,14 @@ function getPunchForm() {
 function setPunches () {
     GM_log("--> setPunches()");
 
+    var schedule = {};
+    if (GM_getValue("schedule", false)) {
+        if (!window.confirm("You aready have saved punches.\nDo you want to overwrite them?")) {
+            GM_log("    Overwrite saved punches canceled");
+            return false;
+        }
+    }
+
     var punchForm = getPunchForm();
     var punchElements = punchForm.elements;
 
@@ -65,10 +72,16 @@ function setPunches () {
             var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
             var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
             var dayOfWeek = new Date(punchDate).getDay();
-            GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
+            //GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
+            if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
+            schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
         }
-        
     }
+
+    var sched = stringify(schedule);
+    GM_log(sched);
+    GM_setValue("schedule", sched);
+    window.alert("Your typical punches have been saved");
 }
 
 /*
