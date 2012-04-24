@@ -35,7 +35,7 @@ function isPunchPage() {
 function addControls() {
     GM_log("--> addControls()");
 
-    var buttonContainer = document.getElementByID("win0divTL_LINK_WRK_TL_ADD_PB");
+    var buttonContainer = document.getElementById("win0divTL_LINK_WRK_TL_ADD_PB");
 
     var dayPunchButton = document.createElement("input");
     dayPunchButton.setAttribute("type", "button");
