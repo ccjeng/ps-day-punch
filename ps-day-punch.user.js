@@ -35,13 +35,18 @@ function isPunchPage() {
 function addControls() {
     GM_log("--> addControls()");
 
+    var dpButtonContainerStyle = "border: 4px solid #ff4a00";
+
     var buttonContainer = document.getElementById("win0divTL_LINK_WRK_TL_ADD_PB");
 
-    var dayPunchButton = document.createElement("input");
-    dayPunchButton.setAttribute("type", "button");
-    dayPunchButton.setAttribute("value", "Day Punch");
+    var dpButtonContainer = document.createElement("div");
+    dpButtonContainer.setAttribute("style", dpButtonContainerStyle);
+        var dayPunchButton = document.createElement("input");
+        dayPunchButton.setAttribute("type", "button");
+        dayPunchButton.setAttribute("value", "Day Punch");
 
-    buttonContainer.appendChild(dayPunchButton);
+    buttonContainer.appendChild(dpButtonContainer);
+        dpButtonContainer.appendChild(dayPunchButton);
 }
 
 try {
