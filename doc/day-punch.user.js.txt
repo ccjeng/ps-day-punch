@@ -1,0 +1,787 @@
+// ==UserScript==
+// @name          Day Punch
+// @namespace     http://sandy.mcarthur.org/userscripts
+// @description   Help automate Weekly Punch Time entry.
+// @include       http://*/psc/ps*/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_*.GBL*
+// @include       https://*/psc/ps*/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_*.GBL*
+// ==/UserScript==
+// OLD: include       http://*/psc/ps/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_TR_PUNCH_PNLG.GBL*
+// OLD: include       https://*/psc/ps/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_TR_PUNCH_PNLG.GBL*
+
+// Copyright (c) 2005 William A. McArthur, Jr.
+// http://Sandy.McArthur.org/
+// My code, the DayPunch code, is placed in the public domain.
+
+// From: http://www.crockford.com/javascript/remedial.html and http://www.crockford.com/JSON/js.html
+Function.prototype.method = function (name, func) {
+    this.prototype[name] = func;
+        return this;
+};
+
+Function.method('inherits', function (parent) {
+    var d = 0, p = (this.prototype = new parent());
+    this.method('uber', function uber(name) {
+        var f, r, t = d, v = parent.prototype;
+        if (t) {
+            while (t) {
+                v = v.constructor.prototype;
+                t -= 1;
+            }
+            f = v[name];
+        } else {
+            f = p[name];
+            if (f == this[name]) {
+                f = v[name];
+            }
+        }
+        d += 1;
+        r = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
+        d -= 1;
+        return r;
+    });
+    return this;
+});
+
+Function.method('swiss', function (parent) {
+    for (var i = 1; i < arguments.length; i += 1) {
+        var name = arguments[i];
+        this.prototype[name] = parent.prototype[name];
+    }
+    return this;
+});
+
+function isAlien(a) {
+    return isObject(a) && typeof a.constructor != 'function';
+}
+
+function isArray(a) {
+    return isObject(a) && a.constructor == Array;
+}
+
+function isBoolean(a) {
+    return typeof a == 'boolean';
+}
+
+function isEmpty(o) {
+    var i, v;
+    if (isObject(o)) {
+        for (i in o) {
+            v = o[i];
+            if (isUndefined(v) && isFunction(v)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function isFunction(a) {
+    return typeof a == 'function';
+}
+
+function isNull(a) {
+    return typeof a == 'object' && !a;
+}
+
+function isNumber(a) {
+    return typeof a == 'number' && isFinite(a);
+}
+
+function isObject(a) {
+    return (a && typeof a == 'object') || isFunction(a);
+}
+
+function isString(a) {
+    return typeof a == 'string';
+}
+
+function isUndefined(a) {
+    return typeof a == 'undefined';
+} 
+
+String.method('entityify', function () {
+    return this.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+});
+
+String.method('quote', function () {
+    return '"' + this.replace(/(["\\])/g, '\\$1') + '"'; // "
+});
+
+String.method('supplant', function (o) {
+    var i, j, s = this, v;
+    for (;;) {
+        i = s.lastIndexOf('{');
+        if (i < 0) {
+            break;
+        }
+        j = s.indexOf('}', i);
+        if (i + 1 >= j) {
+            break;
+        }
+        v = o[s.substring(i + 1, j)];
+        if (!isString(v) && !isNumber(v)) {
+            break;
+        }
+        s = s.substring(0, i) + v + s.substring(j + 1);
+    }
+    return s;
+});
+
+String.method('trim', function () {
+    return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+}); 
+
+if (!isFunction(Function.apply)) {
+    Function.method('apply', function (o, a) {
+        var r, x = '____apply';
+        if (!isObject(o)) {
+            o = {};
+        }
+        o[x] = this;
+        switch ((a && a.length) || 0) {
+            case 0:
+                r = o[x]();
+                break;
+            case 1:
+                r = o[x](a[0]);
+                break;
+            case 2:
+                r = o[x](a[0], a[1]);
+                break;
+            case 3:
+                r = o[x](a[0], a[1], a[2]);
+                break;
+            case 4:
+                r = o[x](a[0], a[1], a[2], a[3]);
+                break;
+            case 5:
+                r = o[x](a[0], a[1], a[2], a[3], a[4]);
+                break;
+            case 6:
+                r = o[x](a[0], a[1], a[2], a[3], a[4], a[5]);
+                break;
+            default:
+                alert('Too many arguments to apply.');
+        }
+        delete o[x];
+        return r;
+    });
+} 
+
+if (!isFunction(Array.prototype.pop)) {
+    Array.method('pop', function () {
+        return this.splice(this.length - 1, 1)[0];
+        });
+}
+
+if (!isFunction(Array.prototype.push)) {
+    Array.method('push', function () {
+        this.splice.apply(this,
+        [this.length, 0].concat(Array.prototype.slice.apply(arguments)));
+        return this.length;
+        });
+}
+
+if (!isFunction(Array.prototype.shift)) {
+    Array.method('shift', function () {
+        return this.splice(0, 1)[0];
+        });
+}
+
+if (!isFunction(Array.prototype.splice)) {
+    Array.method('splice', function (s, d) {
+        var max = Math.max,
+        min = Math.min,
+        a = [], // The return value array
+        e,  // element
+        i = max(arguments.length - 2, 0),   // insert count
+        k = 0,
+        l = this.length,
+        n,  // new length
+        v,  // delta
+        x;  // shift count
+
+        s = s || 0;
+        if (s < 0) {
+            s += l;
+        }
+        s = max(min(s, l), 0);  // start point
+        d = max(min(isNumber(d) ? d : l, l - s), 0);    // delete count
+        v = i - d;
+        n = l + v;
+        while (k < d) {
+            e = this[s + k];
+            if (!isUndefined(e)) {
+                a[k] = e;
+            }
+            k += 1;
+        }
+        x = l - s - d;
+        if (v < 0) {
+            k = s + i;
+            while (x) {
+                this[k] = this[k - v];
+                k += 1;
+                x -= 1;
+            }
+            this.length = n;
+        } else if (v > 0) {
+            k = 1;
+            while (x) {
+                this[n - k] = this[l - k];
+                k += 1;
+                x -= 1;
+            }
+        }
+        for (k = 0; k < i; ++k) {
+            this[s + k] = arguments[k + 2];
+        }
+        return a;
+    });
+}
+
+if (!isFunction(Array.prototype.unshift)) {
+    Array.method('unshift', function () {
+        this.splice.apply(this,
+        [0, 0].concat(Array.prototype.slice.apply(arguments)));
+        return this.length;
+        });
+} 
+
+function stringify(arg) {
+    var i, o, v;
+
+    switch (typeof arg) {
+    case 'object':
+        if (arg) {
+            if (arg.constructor == Array) {
+    
+                o = '[';
+                for (i = 0; i < arg.length; ++i) {
+                    v = stringify(arg[i]);
+                    if (v != 'function' && !isUndefined(v)) {
+                        o += (o != '[' ? ',' : '') + v;
+                    } else {
+                        o += ',';
+                    }
+                }
+                return o + ']';
+            } else if (typeof arg.toString != 'undefined') {
+                o = '{';
+                for (i in arg) {
+                    v = stringify(arg[i]);
+                    if (v != 'function' && !isUndefined(v)) {
+                        o += (o != '{' ? ',' : '') + 
+                        i.quote() + ':' + v;
+                    }
+                }
+                return o + '}';
+            } else {
+                return;
+            }
+        }
+        return 'null';
+    case 'unknown':
+    case 'undefined':
+        return;
+    case 'string':
+        return arg.quote();
+    case 'function':
+        return 'function';
+    default:
+        return String(arg);
+    }
+}
+
+
+var DayPunch = {
+    VERSION: 0.81,
+    
+    showPunches: function() {
+        GM_log("showPunches()");
+        var schedule = this.fetchSchedule();
+        GM_log(schedule);
+        GM_log(stringify(schedule));
+    },
+    
+    savePunches: function() {
+        GM_log("savePunches()");
+        
+        if (this.fetchSchedule()) {
+            if (!window.confirm("You aready have saved punches.\nDo you want to replace them?")) {
+                GM_log("savePunches(): replace saved punches canceled.");
+                return false;
+            }
+        }
+        var schedule = {};
+        
+        var punchForm = DayPunch.getPunchFormName();
+        var form = DayPunch.getPunchForm();
+        var elements = form.elements;
+        for (var i=0; i < elements.length; i++) {
+            var e = elements[i];
+            if (e.name.indexOf("PUNCH_DATE") === 0) {
+                var punchNum = e.name.substring(11);
+                var punchDate = e.value;
+                if (!punchDate) {
+                    continue;
+                }
+                var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
+                var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
+                
+                var dayOfWeek = new Date(punchDate).getDay();
+                
+                //GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
+                
+                if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
+                schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
+                
+            }
+        }
+        
+        var sched = stringify(schedule);
+        GM_log(sched);
+        GM_setValue("schedule", sched);
+        
+        window.alert("Your typical time punches have been saved.");
+    },
+    
+    fetchSchedule: function () {
+        GM_log("fetchSchedule()");
+        var sched = GM_getValue("schedule", "false");
+        eval("window.loadedSchedule = " + sched);
+        var schedule = window.loadedSchedule;
+        //delete window.loadedSchedule; // FF 1.5 won't allow it
+        return schedule;
+    },
+    
+    dayPunch: function() {
+        GM_log("dayPunch()");
+
+        var schedule = this.fetchSchedule();
+        
+        var punchForm = DayPunch.getPunchFormName();
+        var form = DayPunch.getPunchForm();
+        var elements = form.elements;
+        var punchNum = 0;
+        for (var i=0; i < elements.length; i++) {
+            var e = elements[i];
+            if (e.name.indexOf("PUNCH_DATE") === 0) {
+                punchNum = e.name.substring(11);
+            }
+        }
+        
+        var punchDate = document.getElementById("PUNCH_DATE$" + punchNum).value;
+        var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
+        var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
+        
+        if (!punchDate) {
+            punchDate = new Date(document.getElementById("DERIVED_TL_TRTM_START_DT").value);
+            
+        } else {
+            punchDate = new Date(punchDate);
+            punchDate.setDate(punchDate.getDate()+1);
+        }
+
+        var dayOfWeek = punchDate.getDay();
+        while (!schedule[dayOfWeek]) {
+            punchDate.setDate(punchDate.getDate()+1);
+            dayOfWeek = punchDate.getDay();
+        }
+        
+        GM_setValue("punchDate", punchDate.toString());
+        GM_setValue("punchOfDay", 0);
+        
+        // do punches
+        this.doDayPunches();
+    },
+    
+    doDayPunches: function () {
+        GM_log("doDayPunches()");
+        var punchDate = new Date(GM_getValue("punchDate"));
+        var dayOfWeek = punchDate.getDay();
+        var punchOfDay = GM_getValue("punchOfDay");
+        var schedule = DayPunch.fetchSchedule();
+        
+        var punchForm = DayPunch.getPunchFormName();
+        var form = DayPunch.getPunchForm();
+        var elements = form.elements;
+        var punchNum = 0;
+        for (var i=0; i < elements.length; i++) {
+            var e = elements[i];
+            if (e.name.indexOf("PUNCH_DATE") === 0) {
+                punchNum = e.name.substring(11);
+                var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
+                if (!e.value || !punchTime) {
+                    break;
+                }
+            }
+        }
+        
+        var done = false;
+        var punchDateField = document.getElementById("PUNCH_DATE$" + punchNum);
+        var punchTimeField = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum);
+        var punchTypeField = document.getElementById("PUNCH_TYPE$" + punchNum);
+        while (punchDateField && punchOfDay < schedule[dayOfWeek].length) {
+            if (!punchDateField.value || !punchTimeField.value) {
+                punchDateField.value = (punchDate.getMonth()+1) + "/" + punchDate.getDate() + "/" + punchDate.getFullYear();
+                punchTimeField.value = schedule[dayOfWeek][punchOfDay].time;
+                punchTypeField.value = "" + schedule[dayOfWeek][punchOfDay].type;
+                punchOfDay++;
+            }
+            
+            punchNum++;
+            punchDateField = document.getElementById("PUNCH_DATE$" + punchNum);
+            punchTimeField = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum);
+            punchTypeField = document.getElementById("PUNCH_TYPE$" + punchNum);
+        }
+        
+        if (punchOfDay < schedule[dayOfWeek].length) {
+            GM_setValue("punchDay", punchDate.toString());
+            GM_setValue("punchOfDay", punchOfDay);
+            GM_setValue("task", "doDayPunches");
+            
+            var addPunch = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
+            addPunch.click();
+        } else {
+            GM_setValue("punchDay", false);
+            GM_setValue("punchOfDay", false);
+            GM_setValue("task", false);
+
+            var refresh = document.getElementById("SMDP_REFRESH");
+            refresh.click();
+        }
+    },
+    
+    pendingTasks: function () {
+        GM_log("pendingTasks()");
+        var task = GM_getValue("task", "none");
+        switch (task) {
+            case "addingPunches":
+                this.addingPunches();
+                break;
+                
+            case "doDayPunches":
+                window.addEventListener("load", DayPunch.doDayPunches, false);
+                break;
+                
+            case false:
+                break;
+                
+            default:
+                GM_log("Unknown pending task: " + task);
+        }
+    },
+    
+    addFourPunches: function() {
+        GM_log("addFourPunches");
+        GM_setValue("task", "addingPunches");
+        GM_setValue("remainingPunches", 3);
+        
+        var addPunch = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
+        addPunch.click();
+    },
+    
+    addingPunches: function() {
+        GM_log("addingPunches");
+        
+        var remainingPunches = GM_getValue("remainingPunches");
+        if (remainingPunches > 1) {
+            GM_setValue("task", "addingPunches");
+            GM_setValue("remainingPunches", remainingPunches - 1);
+        } else {
+            GM_setValue("task", false);
+            GM_setValue("remainingPunches", 0);
+        }
+        
+        var addPunch = document.getElementById("TL_LINK_WRK_TL_ADD_PB")
+        addPunch.click();
+    },
+    
+    addControls: function () {
+        GM_log("addControls()");
+        var buttons = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
+        if (!buttons) return false;
+        buttons = buttons.parentNode;
+        
+        var group = document.createElement("span");
+        group.setAttribute("id", "SMDP_BUTTONS");
+        group.setAttribute("style", "padding:0.3em;background-color:#aee;border: solid orange medium");
+        group.setAttribute("title", "Added by DayPunch. These are not supported. Use at your own risk.");
+        
+        var dayPunch = document.createElement("input");
+        dayPunch.setAttribute("type", "button");
+        dayPunch.setAttribute("name", "SMDP_DAY_PUNCH");
+        dayPunch.setAttribute("id", "SMDP_DAY_PUNCH");
+        dayPunch.setAttribute("value", "Day Punch");
+        dayPunch.setAttribute("class", "PSPUSHBUTTON");
+        var schedule = this.fetchSchedule();
+        if (!schedule || !(schedule[0] || schedule[1] || schedule[2] || schedule[3] || schedule[4] || schedule[5] || schedule[6])) {
+            //dayPunch.setAttribute("disabled", "disabled");
+            dayPunch.setAttribute("style", "width:98px; margin:2px; text-decoration: line-through;");
+            dayPunch.setAttribute("title", "This is disabled until you have set your punches.");
+            //dayPunch.setAttribute("onclick", "return DayPunch.needToSetPunches();");
+            function dpntsp(event) {
+                DayPunch.needToSetPunches();
+                event.preventDefault();
+            };
+            dayPunch.addEventListener("click", dpntsp, true);
+        } else {
+            dayPunch.setAttribute("style", "width:98px; margin:2px;");
+            dayPunch.setAttribute("title", "Add one day of punches");
+            //dayPunch.setAttribute("onclick", "return DayPunch.dayPunch();");
+            function dpdp(event) {
+                DayPunch.dayPunch();
+                event.preventDefault();
+            };
+            dayPunch.addEventListener("click", dpdp, true);
+        }
+        group.appendChild(dayPunch);
+        
+        var addDay = document.createElement("input");
+        addDay.setAttribute("type", "button");
+        addDay.setAttribute("name", "SMDP_ADD_DAY");
+        addDay.setAttribute("id", "SMDP_ADD_DAY");
+        addDay.setAttribute("value", "Add 4 Punches");
+        addDay.setAttribute("class", "PSPUSHBUTTON");
+        addDay.setAttribute("style", "width:98px; margin:2px;");
+        addDay.setAttribute("title", "Add 4 punches");
+        addDay.setAttribute("onclick", "return DayPunch.addFourPunches();");
+        //group.appendChild(addDay);
+        
+        var refresh = document.createElement("input");
+        refresh.setAttribute("type", "button");
+        refresh.setAttribute("name", "SMDP_REFRESH");
+        refresh.setAttribute("id", "SMDP_REFRESH");
+        refresh.setAttribute("value", "Refresh");
+        refresh.setAttribute("class", "PSPUSHBUTTON");
+        refresh.setAttribute("style", "width:92px;margin:2px;");
+        refresh.setAttribute("title", "Reload page but don't change anything.");
+        var punchForm = DayPunch.getPunchFormName();
+        refresh.setAttribute("onclick", "submitAction_" + punchForm + "(this.form,this.name);");
+        group.appendChild(refresh);
+        
+        var save = document.createElement("input");
+        save.setAttribute("type", "button");
+        save.setAttribute("name", "SMDP_REFRESH");
+        save.setAttribute("id", "SMDP_REFRESH");
+        save.setAttribute("value", "Set Punches");
+        save.setAttribute("class", "PSPUSHBUTTON");
+        save.setAttribute("style", "width:92px;margin:2px;");
+        save.setAttribute("title", "Save currently listed punches as typical work week.");
+        //save.setAttribute("onclick", "return DayPunch.savePunches();");
+        function dpsp(event) {
+            DayPunch.savePunches();
+            event.preventDefault();
+        };
+        save.addEventListener("click", dpsp, true);
+
+        group.appendChild(save);
+        
+        var show = document.createElement("input");
+        show.setAttribute("type", "button");
+        show.setAttribute("name", "SMDP_SHOW");
+        show.setAttribute("id", "SMDP_SHOW");
+        show.setAttribute("value", "Show Punches");
+        show.setAttribute("class", "PSPUSHBUTTON");
+        show.setAttribute("style", "width:92px;margin:2px;");
+        show.setAttribute("title", "Show saved punches");
+        show.setAttribute("onclick", "return DayPunch.showPunches();");
+        //group.appendChild(show);
+        
+        var help = document.createElement("a");
+        help.setAttribute("href", "http://Sandy.McArthur.org/daypunch/");
+        help.setAttribute("target", "_blank");
+        help.setAttribute("title", "Click here to open the Day Punch home page in a new window.");
+    
+        help.appendChild(document.createTextNode("?"));
+        group.appendChild(help);
+
+        
+        buttons.appendChild(group);
+    },
+    
+    needToSetPunches: function () {
+        GM_log("needToSetPunches()");
+        window.alert("You need to set your punches before you can use the Day Punch button.");
+        return false;
+    },
+    
+    getPunchFormName: function () {
+        GM_log("getPunchFormName()");
+        if (this.punchForm) return this.punchForm;
+        
+        var forms = document.forms;
+        for (var i=0; i < forms.length; i++) {
+            var f = forms[i];
+            if (f.name.indexOf("win") === 0) {
+                this.punchForm = f.name;
+                return this.punchForm;
+            }
+        }
+    },
+    
+    getPunchForm: function () {
+        GM_log("getPunchForm()");
+        if (!this.punchForm) {
+            this.getPunchFormName();
+        }
+        return document.forms.namedItem(this.punchForm);
+    },
+    
+    isPunchPage: function () {
+        GM_log("isPunchPage()");
+        return document.getElementById("PUNCH_DATE$0") ? true : false;
+    },
+    
+    calcTimes: function () {
+        GM_log("calcTimes()");
+        var inSeconds = 0;
+        var outSeconds = 0;
+        
+        var punchForm = DayPunch.getPunchFormName();
+        var form = document.forms[punchForm];
+        form = document.forms.namedItem(punchForm);
+        var elements = form.elements;
+        for (var i=0; i < elements.length; i++) {
+            var e = elements[i];
+            if (e.name.indexOf("PUNCH_DATE") === 0) {
+                var punchNum = e.name.substring(11);
+                var punchDate = e.value;
+                if (!punchDate) {
+                    continue;
+                }
+                var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
+                if (punchTime.indexOf("12:") === 0) {
+                    punchTime = "0" + punchTime.substring(2);
+                }
+                if (punchTime.indexOf("PM") > 0) {
+                    punchTime = (parseInt(punchTime.substring(0,punchTime.indexOf(":")))+12) + punchTime.substring(punchTime.indexOf(":"));
+                }
+                punchTime = punchTime.substring(0, punchTime.length-2);
+                var punchSeconds = this.timeToSeconds(punchTime);
+                var punchType = this.findPunchType("PUNCH_TYPE$" + punchNum);
+                switch (punchType) {
+                    case 0: // in
+                        inSeconds += punchSeconds;
+                        break;
+                    case 1: // out
+                        outSeconds += punchSeconds;
+                        break;
+                    default:
+                        GM_log("Didn't understand punchType: " + punchType);
+                        //return;
+                        break;
+                }
+            }
+        }
+        
+        var buttons = document.getElementById("SMDP_BUTTONS");
+        buttons.appendChild(document.createTextNode(" Time Displayed: " + this.secondsToTime(outSeconds - inSeconds)));
+    },
+    
+    secondsToTime: function (seconds) {
+        var time = "";
+        time += (seconds % 60);
+        if (seconds % 60 < 10) time = "0" + time;
+        seconds = seconds / 60;
+        time = (Math.floor(seconds) % 60) + ":" + time;
+        if (Math.floor(seconds) % 60 < 10) time = "0" + time;
+        seconds = seconds / 60;
+        time = Math.floor(seconds) + ":" + time;
+        return time;
+    },
+    
+    findPunchType: function (punch) {
+        GM_log("findPunchType()");
+        try {
+            var seo = window.wrappedJSObject.selectElemOptions_win0;
+            for (var i=0; i < seo.length; i++) {
+                if (seo[i][0] == punch) {
+                    return seo[i][2][0];
+                }
+            }
+        } catch (e) {
+            GM_log("findPunchType()e: " + e);
+            return -1;
+        }
+    },
+    
+    timeToSeconds: function(time) {
+        var seconds = 0;
+        seconds += parseInt(time.substring(0, time.indexOf(":"))) * 60 * 60;
+        time = time.substring(time.indexOf(":")+1);
+        seconds += parseInt(time.substring(0, time.indexOf(":"))) * 60;
+        time = time.substring(time.indexOf(":")+1);
+        seconds += parseInt(time);
+        return seconds;
+    },
+    
+    checkVersion: function() {
+        GM_log("checkVersion()");
+        var lastCheck = GM_getValue("lastCheck", new Date("1/1/1970").toString());
+        lastCheck = new Date(lastCheck);
+        var now = new Date();
+        if (now.getDate() != lastCheck.getDate() || now.getMonth() != lastCheck.getMonth() || now.getFullYear() != lastCheck.getFullYear()) {
+            GM_xmlhttpRequest({
+                method:"GET",
+                url:"http://sandy.mcarthur.org/daypunch/current-version.txt?version=" + DayPunch.VERSION,
+                onload:function (details) {
+                    if (details.readyState == 4 && details.status == 200) {
+                        if (parseFloat(details.responseText) > DayPunch.VERSION) {
+                             var buttons = document.getElementById("SMDP_BUTTONS");
+                             
+                             var newVersion = document.createElement("a");
+                             newVersion.setAttribute("href", "http://Sandy.McArthur.org/daypunch/");
+                             newVersion.setAttribute("targe", "_blank");
+                             newVersion.setAttribute("title", "Version " + parseFloat(details.responseText) + " is available. (Version " + parseFloat(this.VERSION) + " currently installed.)");
+                             newVersion.appendChild(document.createTextNode("Upgrade Day Punch"));
+                             
+                             buttons.appendChild(newVersion);
+                        }
+                    }
+                }
+            });
+            GM_setValue("lastCheck", now.toString());
+        }
+    },
+};
+
+try {
+    if (!isFunction(GM_log) || !isFunction(GM_setValue) || !isFunction(GM_getValue) || !isFunction(GM_xmlhttpRequest)) {
+        // empty
+    }
+    if (DayPunch.isPunchPage()) {
+        DayPunch.addControls();
+        DayPunch.pendingTasks();
+        DayPunch.calcTimes();
+        DayPunch.checkVersion();
+        window.DayPunch = DayPunch;
+    }
+} catch (e) {
+    GM_log(e, 2);
+    
+    var cp = document.createElement("div");
+    cp.setAttribute("style", "position:fixed; bottom: 5px; right: 5px; background-color:#aee;border: solid orange medium");
+
+    var a = document.createElement("a");
+    a.setAttribute("href", "http://Sandy.McArthur.org/daypunch/");
+    a.setAttribute("target", "_blank");
+
+    a.appendChild(document.createTextNode("Day Punch disabled."));
+    cp.appendChild(a);
+    cp.appendChild(document.createElement("br"));
+
+
+    cp.appendChild(document.createTextNode("You may need a newer version of "));
+    a = document.createElement("a");
+    a.setAttribute("href", "http://GreaseMonkey.mozdev.org/");
+    a.setAttribute("target", "_blank");
+    a.appendChild(document.createTextNode("Grease Monkey"));
+    cp.appendChild(a);
+    cp.appendChild(document.createTextNode("  for Day Punch to work."));
+
+    var body = document.getElementsByTagName("body")
+    body = body[0];
+    body.appendChild(cp);
+}

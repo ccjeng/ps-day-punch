@@ -1,0 +1,11 @@
+Google Chrome (and Chromium?) users:
+
+    1) Install TamperMonkey (https://chrome.google.com/webstore/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+    2) Add this script to TamperMonkey
+
+Firefox users:
+
+    1) Install GreaseMonkey (https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/)
+    2) Add this script to GreaseMonkey
+
+Update URL: []
