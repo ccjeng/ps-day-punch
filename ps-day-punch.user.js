@@ -78,8 +78,8 @@ function setPunches () {
         }
     }
 
-    var sched = stringify(schedule);
-    GM_log(sched);
+    var sched = JSON.stringify(schedule);
+    //GM_log(sched);
     GM_setValue("schedule", sched);
     window.alert("Your typical punches have been saved");
 }
@@ -133,7 +133,7 @@ function addControls() {
 try {
     GM_log("--> Main script execution try/catch block");
     if (isPunchPage()) {
-        GM_log("We've hit the punch page, do stuff:");
+        GM_log("    We're on the punch page");
         addControls();
     }
 } catch (e) {
