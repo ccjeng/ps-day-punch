@@ -26,7 +26,49 @@
  */
 function isPunchPage() {
     GM_log("--> isPunchPage()");
+
     return document.getElementById("PUNCH_DATE$0") ? true : false;
+}
+
+/*
+ * Locate and return the object which represents
+ * the punch form.
+ */
+function getPunchForm() {
+    GM_log("--> getPunchForm()");
+
+    var forms = document.forms;
+    for (var i = 0; i < forms.length; i++) {
+        var f = forms[i];
+        if (f.name.indexOf("win0") == 0) {
+            return f.name;
+        }
+    }
+
+    return false;
+}
+
+/*
+ * Save the currently displayed punches.
+ */
+function setPunches () {
+    GM_log("--> setPunches()");
+
+    var punchForm = getPunchForm();
+    var punchElements = punchForm.elements;
+
+    for (var i = 0; i < punchElements.length; i++) {
+        var e = punchElements[i];
+        if (e.name.indexOf("PUNCH_DATE") == 0) {
+            var punchNum = e.name.substring(11);
+            var punchDate = e.value;
+            var punchTime = document.getElementById("DERIVED_TL_PNCH_PUNCH_TIME$" + punchNum).value;
+            var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
+            var dayOfWeek = new Date(punchDate).getDay();
+            GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
+        }
+        
+    }
 }
 
 /*
@@ -50,6 +92,7 @@ function addControls() {
         setPunchButton.setAttribute("type", "button");
         setPunchButton.setAttribute("title", "Save currently displayed punches as typical work week");
         setPunchButton.setAttribute("value", "Set Punches");
+        setPunchButton.addEventListener("click", setPunches, true);
         var showPunchButton = document.createElement("input");
         showPunchButton.setAttribute("style", showButtonStyle);
         showPunchButton.setAttribute("type", "button");
