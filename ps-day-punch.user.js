@@ -73,9 +73,9 @@ function setPunches () {
             var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
             var dayOfWeek = new Date(punchDate).getDay();
             //GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
-            //if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
-            //schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
-            schedule[dayOfWeek] = {"time": punchTime, "type": punchType};
+            if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
+            schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
+            //schedule[dayOfWeek] = {"time": punchTime, "type": punchType};
         }
     }
 
