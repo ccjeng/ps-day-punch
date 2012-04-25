@@ -125,12 +125,15 @@ function setPunches () {
  */
 function showPunches() {
     GM_log("--> showPunches()");
-    window.alert(dump(JSON.parse(GM_getValue("schedule", false))));
-/*
-    var sched = JSON.parse(GM_getValue("schedule", false));
-    GM_log(sched[1].join("\n"));
-    var schedule = "";
 
+
+    var sched = JSON.parse(GM_getValue("schedule", false));
+    GM_log(sched.length);
+    GM_log(sched[1].length);
+    GM_log(sched[1][0].time);
+    GM_log(sched[1][0].type);
+    var schedule = "";
+/*
     if (sched) {
         for (var day in sched) {
             switch (parseInt(day)) {
