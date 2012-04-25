@@ -115,12 +115,13 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            for (var punch in day) {
+            for (var punch_tmp in day) {
+                var punch = JSON.parse(punch_tmp);
                 for (var prop in punch) {
                     GM_log(prop);
                 }
                 var type = "";
-                if (punch["type"] == 1) {
+                if (parseInt(punch["type"]) == 1) {
                     type = "In";
                 } else {
                     type = "Out";
