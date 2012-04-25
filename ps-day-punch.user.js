@@ -127,10 +127,6 @@ function showPunches() {
     GM_log("--> showPunches()");
 
     var sched = JSON.parse(GM_getValue("schedule", false));
-    /*GM_log(sched.length);
-    GM_log(sched[1].length);
-    GM_log(sched[1][0].time);
-    GM_log(sched[1][0].type);*/
     var schedule = "";
 
     if (sched) {
@@ -157,7 +153,13 @@ function showPunches() {
                 break;
             }
             for (var i = 0; i < sched[day].length; i++) {
-                GM_log(sched[day][i].time + " " + sched[day][i].type);
+                var type = "";
+                if (sched[day][i].type == 1) {
+                    type = "In ";
+                } else {
+                    type = "Out ";
+                }
+                schedule += "  " + type + sched[day][i].time;
             }
         }
         window.alert(schedule);
