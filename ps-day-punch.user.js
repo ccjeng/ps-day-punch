@@ -126,14 +126,13 @@ function setPunches () {
 function showPunches() {
     GM_log("--> showPunches()");
 
-
     var sched = JSON.parse(GM_getValue("schedule", false));
-    GM_log(sched.length);
+    /*GM_log(sched.length);
     GM_log(sched[1].length);
     GM_log(sched[1][0].time);
-    GM_log(sched[1][0].type);
+    GM_log(sched[1][0].type);*/
     var schedule = "";
-/*
+
     if (sched) {
         for (var day in sched) {
             switch (parseInt(day)) {
@@ -157,11 +156,15 @@ function showPunches() {
                 break;
             }
         }
+        for (var i = 1; i <= day.length; i++) {
+            for (var j = 0; j <= day[i].length; j++) {
+                GM_log(day[i][j].time + " " + day[i][j].type);
+            }
+        }
         window.alert(schedule);
     } else {
         window.alert("You have no saved punches to show.");
     }
-*/
 }
 
 /*
