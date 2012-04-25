@@ -98,18 +98,63 @@ function showPunches() {
             switch (parseInt(day)) {
             case 1:
                 schedule += "Monday:\n";
+                for (var punch in day) {
+                    var type = "";
+                    if (punch["type"] == 1) {
+                        type = "In";
+                    } else {
+                        type = "Out";
+                    }
+                    schedule += punch["time"] + " " type;
+                }
                 break;
             case 2:
                 schedule += "Tuesday:\n";
+                for (var punch in day) {
+                    var type = "";
+                    if (punch["type"] == 1) {
+                        type = "In";
+                    } else {
+                        type = "Out";
+                    }
+                    schedule += punch["time"] + " " type;
+                }
                 break;
             case 3:
                 schedule += "Wednesday:\n";
+                for (var punch in day) {
+                    var type = "";
+                    if (punch["type"] == 1) {
+                        type = "In";
+                    } else {
+                        type = "Out";
+                    }
+                    schedule += punch["time"] + " " type;
+                }
                 break;
             case 4:
                 schedule += "Thursday:\n";
+                for (var punch in day) {
+                    var type = "";
+                    if (punch["type"] == 1) {
+                        type = "In";
+                    } else {
+                        type = "Out";
+                    }
+                    schedule += punch["time"] + " " type;
+                }
                 break;
             case 5:
                 schedule += "Friday:\n";
+                for (var punch in day) {
+                    var type = "";
+                    if (punch["type"] == 1) {
+                        type = "In";
+                    } else {
+                        type = "Out";
+                    }
+                    schedule += punch["time"] + " " type;
+                }
                 break;
             default:
                 GM_log("    Unknown day: " + day);
