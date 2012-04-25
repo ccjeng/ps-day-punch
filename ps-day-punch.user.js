@@ -216,6 +216,8 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         addControls();
+        var oemAddPunchButton = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
+        oemAddPunchButton.addEventListener("click", addControls(), true);
     }
 } catch (e) {
     GM_log("Exception caught: " + e);
