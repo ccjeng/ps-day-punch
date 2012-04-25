@@ -115,7 +115,8 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            for (var i = 0; i < day.length; i++) {
+            GM_log(JSON.parse(day));
+            /*for (var i = 0; i < day.length; i++) {
                 var punch = day[i];
                 var type = "";
                 if (punch.type == 1) {
@@ -124,7 +125,7 @@ function showPunches() {
                     type = "Out";
                 }
                 schedule += punch.time + " " + type + "\n";
-            }
+            }*/
         }
         window.alert(schedule);
     } else {
