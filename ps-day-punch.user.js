@@ -85,6 +85,19 @@ function setPunches () {
 }
 
 /*
+ * Display saved punches to user.
+ */
+function showPunches() {
+    GM_log("--> showPunches()");
+
+    if (GM_getValue("schedule", false)) {
+        window.alert("Here are your saved punches:");
+    } else {
+        window.alert("You have no saved punches to show.");
+    }
+}
+
+/*
  * Add some buttons to the page.
  */
 function addControls() {
@@ -111,6 +124,7 @@ function addControls() {
         showPunchButton.setAttribute("type", "button");
         showPunchButton.setAttribute("title", "Show saved punches");
         showPunchButton.setAttribute("value", "Show Punches");
+        setPunchButton.addEventListener("click", showPunches, true);
         var dayPunchButton = document.createElement("input");
         dayPunchButton.setAttribute("style", dpButtonStyle);
         dayPunchButton.setAttribute("type", "button");
@@ -121,7 +135,6 @@ function addControls() {
         weekPunchButton.setAttribute("type", "button");
         weekPunchButton.setAttribute("title", "Punch in an entire week");
         weekPunchButton.setAttribute("value", "Week Punch");
-
 
     buttonContainer.appendChild(dpButtonContainer);
         dpButtonContainer.appendChild(setPunchButton);
