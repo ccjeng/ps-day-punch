@@ -79,7 +79,7 @@ function setPunches () {
     }
 
     var sched = JSON.stringify(schedule);
-    GM_log(sched);
+    //GM_log(sched);
     GM_setValue("schedule", sched);
     window.alert("Your typical punches have been saved");
 }
@@ -133,6 +133,23 @@ function showPunches() {
 }
 
 /*
+ * Punch in time for a single day.
+ */
+function dayPunch() {
+    GM_log("--> dayPunch()");
+
+    window.alert("This doesn't do anything yet.");
+}
+
+/*
+ * Punch in time for the entire week.
+ */
+function weekPunch() {
+    GM_log("--> weekPunch()");
+
+}
+
+/*
  * Add some buttons to the page.
  */
 function addControls() {
@@ -165,11 +182,13 @@ function addControls() {
         dayPunchButton.setAttribute("type", "button");
         dayPunchButton.setAttribute("title", "Punch in a single day");
         dayPunchButton.setAttribute("value", "Day Punch");
+        dayPunchButton.addEventListener("click", dayPunch, true);
         var weekPunchButton = document.createElement("input");
         weekPunchButton.setAttribute("style", wpButtonStyle);
         weekPunchButton.setAttribute("type", "button");
         weekPunchButton.setAttribute("title", "Punch in an entire week");
         weekPunchButton.setAttribute("value", "Week Punch");
+        weekPunchButton.addEventListener("click", weekPunch, true);
 
     buttonContainer.appendChild(dpButtonContainer);
         dpButtonContainer.appendChild(setPunchButton);
