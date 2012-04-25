@@ -116,13 +116,16 @@ function showPunches() {
                 break;
             }
             for (var punch in day) {
+                for (var prop in punch) {
+                    GM_log(prop);
+                }
                 var type = "";
                 if (punch["type"] == 1) {
                     type = "In";
                 } else {
                     type = "Out";
                 }
-                schedule += punch["time"] + " " + type;
+                schedule += punch["time"] + " " + type + "\n";
             }
         }
         window.alert(schedule);
