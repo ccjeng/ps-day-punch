@@ -53,7 +53,7 @@ function getPunchForm() {
 function setPunches () {
     GM_log("--> setPunches()");
 
-    var schedule = {};
+    var schedule = [];
     if (GM_getValue("schedule", false)) {
         if (!window.confirm("You aready have saved punches.\nDo you want to overwrite them?")) {
             GM_log("    Overwrite saved punches canceled");
@@ -73,13 +73,14 @@ function setPunches () {
             var punchType = document.getElementById("PUNCH_TYPE$" + punchNum).value;
             var dayOfWeek = new Date(punchDate).getDay();
             //GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
-            if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
-            schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
+            //if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
+            //schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
+            schedule[dayOfWeek] = {"time": punchTime, "type": punchType};
         }
     }
 
     var sched = JSON.stringify(schedule);
-    //GM_log(sched);
+    GM_log(sched);
     GM_setValue("schedule", sched);
     window.alert("Your typical punches have been saved");
 }
@@ -91,7 +92,7 @@ function showPunches() {
     GM_log("--> showPunches()");
 
     var sched = JSON.parse(GM_getValue("schedule", false));
-    GM_log(sched.join("\n"));
+    GM_log(sched[1].join("\n"));
     var schedule = "";
 
     if (sched) {
