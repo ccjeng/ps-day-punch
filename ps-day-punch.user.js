@@ -173,8 +173,7 @@ function addControls() {
         var dpButtonStyle      = "display: inline; margin: 0; padding: 0;";
         var wpButtonStyle      = "display: inline; margin: 0; padding: 0;";
 
-    //var buttonContainer = document.getElementById("win0divTL_LINK_WRK_TL_ADD_PB");
-    var buttonContainer = document.getElementById("win0divDERIVED_TL_PNCH_TR_NEW_TIME_MSG");
+    var buttonContainer = document.getElementById("win0divTL_LINK_WRK_TL_ADD_PB");
 
     var dpButtonContainer = document.createElement("div");
     dpButtonContainer.setAttribute("style", dpButtonContainerStyle);
@@ -217,8 +216,6 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         addControls();
-        var oemAddPunchButton = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
-        oemAddPunchButton.addEventListener("click", addControls, true);
     }
 } catch (e) {
     GM_log("Exception caught: " + e);
