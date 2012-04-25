@@ -90,8 +90,33 @@ function setPunches () {
 function showPunches() {
     GM_log("--> showPunches()");
 
-    if (GM_getValue("schedule", false)) {
-        window.alert("Here are your saved punches:");
+    var sched = JSON.parse(GM_getValue("schedule", false));
+    var schedule = "";
+
+    if (sched) {
+        for (var i = 1; i <= sched.length; i++) {
+            switch (i) {
+            case 1:
+                schedule += "Monday:\n";
+                break;
+            case 2:
+                schedule += "Tuesday:\n";
+                break;
+            case 3:
+                schedule += "Wednesday:\n";
+                break;
+            case 4:
+                schedule += "Thursday:\n";
+                break;
+            case 5:
+                schedule += "Friday:\n";
+                break;
+            default:
+                GM_log("    Unknown day?");
+                break;
+            }
+        }
+        window.alert(schedule);
     } else {
         window.alert("You have no saved punches to show.");
     }
@@ -124,7 +149,7 @@ function addControls() {
         showPunchButton.setAttribute("type", "button");
         showPunchButton.setAttribute("title", "Show saved punches");
         showPunchButton.setAttribute("value", "Show Punches");
-        setPunchButton.addEventListener("click", showPunches, true);
+        showPunchButton.addEventListener("click", showPunches, true);
         var dayPunchButton = document.createElement("input");
         dayPunchButton.setAttribute("style", dpButtonStyle);
         dayPunchButton.setAttribute("type", "button");
