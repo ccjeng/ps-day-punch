@@ -19,6 +19,42 @@
  */
 
 
+/**
+ * Function : dump()
+ * Arguments: The data - array,hash(associative array),object
+ *    The level - OPTIONAL
+ * Returns  : The textual representation of the array.
+ * This function was inspired by the print_r function of PHP.
+ * This will accept some data as the argument and return a
+ * text that will be a more readable version of the
+ * array/hash/object that is given.
+ * Docs: http://www.openjs.com/scripts/others/dump_function_php_print_r.php
+ */
+function dump(arr,level) {
+    var dumped_text = "";
+    if(!level) level = 0;
+    
+    //The padding given at the beginning of the line.
+    var level_padding = "";
+    for(var j=0;j<level+1;j++) level_padding += "    ";
+    
+    if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+        for(var item in arr) {
+            var value = arr[item];
+            
+            if(typeof(value) == 'object') { //If it is an array,
+                dumped_text += level_padding + "'" + item + "' ...\n";
+                dumped_text += dump(value,level+1);
+            } else {
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+            }
+        }
+    } else { //Stings/Chars/Numbers etc.
+        dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+    }
+    return dumped_text;
+}
+
 /*
  * There's a lot of AJAX in PeopleSoft, therefore
  * URLs are not dependable. This checks for an element
@@ -53,7 +89,7 @@ function getPunchForm() {
 function setPunches () {
     GM_log("--> setPunches()");
 
-    var schedule = [];
+    var schedule = {};
     if (GM_getValue("schedule", false)) {
         if (!window.confirm("You aready have saved punches.\nDo you want to overwrite them?")) {
             GM_log("    Overwrite saved punches canceled");
@@ -75,7 +111,6 @@ function setPunches () {
             //GM_log(punchDate + " @ " + punchTime + " : " + punchType + " - " + dayOfWeek);
             if (!schedule[dayOfWeek]) schedule[dayOfWeek] = [];
             schedule[dayOfWeek][schedule[dayOfWeek].length] = {"time": punchTime, "type": punchType};
-            //schedule[dayOfWeek] = {"time": punchTime, "type": punchType};
         }
     }
 
@@ -90,7 +125,8 @@ function setPunches () {
  */
 function showPunches() {
     GM_log("--> showPunches()");
-
+    window.alert(dump(JSON.parse(GM_getValue("schedule", false))));
+/*
     var sched = JSON.parse(GM_getValue("schedule", false));
     GM_log(sched[1].join("\n"));
     var schedule = "";
@@ -117,24 +153,12 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            /*for (var prop in day) {
-                GM_log(JSON.stringify(prop));
-            }
-            for (var i = 0; i < day.length; i++) {
-                var punch = day[i];
-                var type = "";
-                if (punch.type == 1) {
-                    type = "In";
-                } else {
-                    type = "Out";
-                }
-                schedule += punch.time + " " + type + "\n";
-            }*/
         }
         window.alert(schedule);
     } else {
         window.alert("You have no saved punches to show.");
     }
+*/
 }
 
 /*
