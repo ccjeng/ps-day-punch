@@ -112,7 +112,7 @@ function showPunches() {
                 schedule += "Friday:\n";
                 break;
             default:
-                GM_log("    Unknown day?");
+                GM_log("    Unknown day: " + day);
                 break;
             }
         }
