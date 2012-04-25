@@ -94,8 +94,8 @@ function showPunches() {
     var schedule = "";
 
     if (sched) {
-        for (var i = 1; i <= sched.length; i++) {
-            switch (i) {
+        for (var day in sched) {
+            switch (day) {
             case 1:
                 schedule += "Monday:\n";
                 break;
