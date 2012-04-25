@@ -134,8 +134,9 @@ function showPunches() {
     var schedule = "";
 
     if (sched) {
-        for (var day in sched) {
-            switch (parseInt(day)) {
+        for (var day_tmp in sched) {
+            var day = parseInt(day_tmp);
+            switch (day) {
             case 1:
                 schedule += "Monday:\n";
                 break;
@@ -155,10 +156,8 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-        }
-        for (var i = 1; i <= day.length; i++) {
-            for (var j = 0; j <= day[i].length; j++) {
-                GM_log(day[i][j].time + " " + day[i][j].type);
+            for (var i = 0; i < sched[day].length; i++) {
+                GM_log(sched[day][i].time + " " + sched[day][i].type);
             }
         }
         window.alert(schedule);
