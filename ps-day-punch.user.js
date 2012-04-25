@@ -115,18 +115,15 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            for (var punch_tmp in day) {
-                var punch = JSON.parse(punch_tmp);
-                for (var prop in punch) {
-                    GM_log(prop);
-                }
+            for (var i = 0; i < day.length; i++) {
+                var punch = day[i];
                 var type = "";
-                if (parseInt(punch["type"]) == 1) {
+                if (punch.type == 1) {
                     type = "In";
                 } else {
                     type = "Out";
                 }
-                schedule += punch["time"] + " " + type + "\n";
+                schedule += punch.time + " " + type + "\n";
             }
         }
         window.alert(schedule);
