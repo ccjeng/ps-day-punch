@@ -115,7 +115,9 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            GM_log(JSON.parse(day));
+            for (var prop in day) {
+                GM_log(JSON.stringify(prop));
+            }
             /*for (var i = 0; i < day.length; i++) {
                 var punch = day[i];
                 var type = "";
