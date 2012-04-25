@@ -138,7 +138,13 @@ function showPunches() {
 function dayPunch() {
     GM_log("--> dayPunch()");
 
-    window.alert("This doesn't do anything yet.");
+    if (GM_getValue("wp", false)) {
+        window.alert("You already punched the entire week.");
+        return false;
+    }
+
+    GM_setValue("dp", true);
+    //var punchForm = getPunchForm();
 }
 
 /*
@@ -147,6 +153,12 @@ function dayPunch() {
 function weekPunch() {
     GM_log("--> weekPunch()");
 
+    if (GM_getValue("dp", false)) {
+        window.alert("Finish out the week using the Day Punch button.");
+        return false;
+    }
+
+    GM_setValue("wp", true);
 }
 
 /*
@@ -201,6 +213,8 @@ try {
     GM_log("--> Main script execution try/catch block");
     if (isPunchPage()) {
         GM_log("    We're on the punch page");
+        GM_setValue("dp", false);
+        GM_setValue("wp", false);
         addControls();
     }
 } catch (e) {
