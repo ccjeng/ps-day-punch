@@ -91,6 +91,7 @@ function showPunches() {
     GM_log("--> showPunches()");
 
     var sched = JSON.parse(GM_getValue("schedule", false));
+    GM_log(sched.join("\n"));
     var schedule = "";
 
     if (sched) {
@@ -115,10 +116,10 @@ function showPunches() {
                 GM_log("    Unknown day: " + day);
                 break;
             }
-            for (var prop in day) {
+            /*for (var prop in day) {
                 GM_log(JSON.stringify(prop));
             }
-            /*for (var i = 0; i < day.length; i++) {
+            for (var i = 0; i < day.length; i++) {
                 var punch = day[i];
                 var type = "";
                 if (punch.type == 1) {
