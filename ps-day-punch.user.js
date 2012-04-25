@@ -85,7 +85,7 @@ function setPunches () {
 }
 
 /*
- * Display saved punches to user.
+ * Display saved punches in dialog box.
  */
 function showPunches() {
     GM_log("--> showPunches()");
