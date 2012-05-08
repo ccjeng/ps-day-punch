@@ -2,7 +2,8 @@
 // @name           PeopleSoft Day Punch Helper
 // @version        1.0.0
 // @description    Help automate Weekly Punch Time entry in PeopleSoft.
-// @match          https://*/ps*/ps*/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_*.GBL*
+// @match          https://*/ps*/ps/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_*.GBL*
+// @match          http://*/ps*/ps/EMPLOYEE/HRMS/c/ROLE_EMPLOYEE.TL_*.GBL*
 // @copyright      2012 Thomas Gordon
 // @license        cc-by-3.0; http://creativecommons.org/licenses/by/3.0/
 // ==/UserScript==
