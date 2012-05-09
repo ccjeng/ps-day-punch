@@ -134,6 +134,33 @@ function showPunches() {
 }
 
 /*
+ * When does this week begin?
+ */
+function setStartDate() {
+    GM_log("--> setStartDate()");
+
+    var startDate = document.getElementById("DERIVED_TL_TRTM_START_DT");
+    GM_setValue("startDate", startDate);
+}
+
+/*
+ * When is the most recent date we have
+ * punched time for?
+ */
+function setMostRecentDate() {
+    GM_log("--> setMostRecentDate()");
+
+    var tmpPunchDateField = document.getElementById("PUNCH_DATE$0");
+
+    if (tmpPunchDateField != undefined) {
+        var punchDateFieldParent = tmpPunchDateField.parentNode;
+        GM_log(punchDateFieldParent.length);
+    } else {
+        GM_setValue("mostRecentDate", null);
+    }
+}
+
+/*
  * Punch in time for a single day.
  */
 function dayPunch() {
