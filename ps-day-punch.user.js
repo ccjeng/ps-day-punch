@@ -210,7 +210,7 @@ function addControls() {
         dpButtonContainer.appendChild(weekPunchButton);
 }
 
-function whatChanged () {
+function whatChanged() {
     var insertedNodes = [];
     var observer = new WebKitMutationObserver(function(mutations) {
      mutations.forEach(function(mutation) {
@@ -229,7 +229,7 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         window.addEventListener("load", addControls, false);
-        self.setInterval(whatChanged(), 2500);
+        window.setInterval(whatChanged, 2500);
         //addControls();
 
     }
