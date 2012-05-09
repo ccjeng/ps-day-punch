@@ -23,8 +23,10 @@
  * I need this.
  */
 function sleep(s) {
+    GM_log("--> sleep()");
+
     var ms = s * 1000;
-    window.setTimeout(function(){}, ms);
+    window.setTimeout(function(){ GM_log("    Sleeping for " + ms + " milliseconds"); }, ms);
 }
 
 /*
