@@ -216,17 +216,21 @@ try {
         GM_log("    We're on the punch page");
         GM_setValue("dp", false);
         GM_setValue("wp", false);
+        addControls();
 
         /*
          * We're using the new (as of 05/09/2012) Mutation
-         * Observers functionality to detect changes to the page,
-         * which is what determines whether or not we need to
-         * (re-)add our control buttons. Currently it just looks
-         * for *any* mutations, but making things more precise would
-         * probably be a good idea.
+         * Observers functionality below to detect changes
+         * to the page markup, which is how we'll decide
+         * whether or not we need to re-add our controls;
+         * previously, they would get blown out after an
+         * XMLHttpRequest by the stock PeopleSoft JS,
+         * initiated by "Add a Punch".
          * 
-         * Also as of this writing, mutation observers are not
-         * supported in Firefox, but are slated to be in version 14.
+         * Also as of this writing, mutation observers are
+         * not supported in Firefox, but are slated to be
+         * in version 14.
+         * 
          * Somehow I doubt I'll be finished before then.
          */
         var insertedNodes = [];
@@ -235,15 +239,9 @@ try {
            for (var i = 0; i < mutation.addedNodes.length; i++) {
                if (mutation.addedNodes[i].id == "ACE_width") {
                    addControls();
-                   console.log("Table was added/modified, throw our controls down.");
                    break;
                }
            }
-               
-           //  insertedNodes.push(mutation.addedNodes[i]);
-           //console.log(insertedNodes);
-           //if (insertedNodes.length > 0)
-           //    addControls();
          });
         });
         observer.observe(document.body, { childList: true, subtree: true });
