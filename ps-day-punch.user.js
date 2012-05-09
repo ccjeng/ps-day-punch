@@ -232,11 +232,15 @@ try {
         var insertedNodes = [];
         var observer = new WebKitMutationObserver(function(mutations) {
          mutations.forEach(function(mutation) {
-           for (var i = 0; i < mutation.addedNodes.length; i++)
-             insertedNodes.push(mutation.addedNodes[i]);
+           for (var i = 0; i < mutation.addedNodes.length; i++) {
+               if (mutation.addedNodes[i].id == "ACE_width")
+                   console.log("Table was added/modified, throw our controls down.");
+           }
+               
+           //  insertedNodes.push(mutation.addedNodes[i]);
            //console.log(insertedNodes);
-           if (insertedNodes.length > 0)
-               addControls();
+           //if (insertedNodes.length > 0)
+           //    addControls();
          });
         });
         observer.observe(document.body, { childList: true, subtree: true });
