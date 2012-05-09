@@ -210,19 +210,6 @@ function addControls() {
         dpButtonContainer.appendChild(weekPunchButton);
 }
 
-function whatChanged() {
-    var insertedNodes = [];
-    var observer = new WebKitMutationObserver(function(mutations) {
-     mutations.forEach(function(mutation) {
-       for (var i = 0; i < mutation.addedNodes.length; i++)
-         insertedNodes.push(mutation.addedNodes[i]);
-       console.log(insertedNodes);
-     });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-}
-
 try {
     GM_log("--> Main script execution try/catch block");
     if (isPunchPage()) {
@@ -230,9 +217,17 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         window.addEventListener("load", addControls, false);
-        window.setInterval(whatChanged, 2500);
+        //window.setInterval(whatChanged, 2500);
         //addControls();
-
+        var insertedNodes = [];
+        var observer = new WebKitMutationObserver(function(mutations) {
+         mutations.forEach(function(mutation) {
+           for (var i = 0; i < mutation.addedNodes.length; i++)
+             insertedNodes.push(mutation.addedNodes[i]);
+           console.log(insertedNodes);
+         });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
     }
 } catch (e) {
     GM_log("Exception caught: " + e);
