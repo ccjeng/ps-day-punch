@@ -140,7 +140,7 @@ function setStartDate() {
     GM_log("--> setStartDate()");
 
     var startDate = document.getElementById("DERIVED_TL_TRTM_START_DT");
-    GM_setValue("startDate", startDate);
+    GM_setValue("startDate", startDate.value);
 }
 
 /*
@@ -150,11 +150,11 @@ function setStartDate() {
 function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
-    var tmpPunchDateField = document.getElementById("PUNCH_DATE$0");
+    var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
 
-    if (tmpPunchDateField != undefined) {
-        var punchDateFieldParent = tmpPunchDateField.parentNode;
-        GM_log(punchDateFieldParent.length);
+    if (tmpFirstPunchRow != undefined) {
+        var punchRowParent = tmpFirstPunchRow.parentNode;
+        GM_log(punchRowParent.lastChild.id);
     } else {
         GM_setValue("mostRecentDate", null);
     }
