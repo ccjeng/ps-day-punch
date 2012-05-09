@@ -233,8 +233,11 @@ try {
         var observer = new WebKitMutationObserver(function(mutations) {
          mutations.forEach(function(mutation) {
            for (var i = 0; i < mutation.addedNodes.length; i++) {
-               if (mutation.addedNodes[i].id == "ACE_width")
+               if (mutation.addedNodes[i].id == "ACE_width") {
+                   addControls();
                    console.log("Table was added/modified, throw our controls down.");
+                   break;
+               }
            }
                
            //  insertedNodes.push(mutation.addedNodes[i]);
