@@ -219,8 +219,7 @@ function whatChanged () {
      });
     });
     observer.observe(document, { childList: true });
-    //console.log(insertedNodes);
-    GM_log(insertedNodes);
+    console.log(insertedNodes);
 }
 
 try {
