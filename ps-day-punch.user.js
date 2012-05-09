@@ -229,7 +229,7 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         window.addEventListener("load", addControls, false);
-        window.setInterval(whatChanged(), 500);
+        self.setInterval(whatChanged(), 2500);
         //addControls();
 
     }
