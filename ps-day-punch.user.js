@@ -156,7 +156,10 @@ function setMostRecentDate() {
         var punchRowParent = tmpFirstPunchRow.parentNode;
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
-        GM_log(mostRecentPunchRow.id);
+        var theId = mostRecentPunchRow.id;
+        var theUnderscore = theId.indexOf("_");
+        var theNumber = theId.substring(theUnderscore + 3);
+        GM_log(theNumber);
     } else {
         GM_setValue("mostRecentDate", null);
     }
