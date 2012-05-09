@@ -19,6 +19,13 @@
  * directory of this project.
  */
 
+/*
+ * I need this.
+ */
+function sleep(s) {
+    var ms = s * 1000;
+    window.setTimeout(function(){}, ms);
+}
 
 /*
  * There's a lot of AJAX in PeopleSoft, therefore
@@ -152,35 +159,56 @@ function setMostRecentDate() {
 
     var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
 
-    if (tmpFirstPunchRow != undefined) {
+    if (typeof tmpFirstPunchRow != undefined) {
         var punchRowParent = tmpFirstPunchRow.parentNode;
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
         var theId = mostRecentPunchRow.id;
         var theStart = theId.indexOf("row");
         var theNumber = theId.substring(theStart + 3);
+        theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
         var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-        GM_log(mostRecentDateElement.value);
+        GM_setValue("mostRecentDate", mostRecentDateElement.value);
     } else {
-        GM_setValue("mostRecentDate", null);
+        var mostRecentDate = GM_getValue("startDate");
+        GM_setValue("mostRecentDate", mostRecentDate);
     }
+}
+
+/*
+ * This just clicks "Add a Punch"
+ */
+function addRow() {
+    GM_log("--> addRow()");
+
+    var addPunch = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
+    addPunch.click();
+    sleep(2);
 }
 
 /*
  * Punch in time for a single day.
  */
-function dayPunch() {
+function dayPunch(days) {
     GM_log("--> dayPunch()");
 
-    if (GM_getValue("wp", false)) {
+    days = typeof days != undefined ? days : 1;
+
+    for (var i = 0; i < days; i++) {
+        for (var j = 0; j < 4; j++) {
+            setStartDate();
+            setMostRecentDate();
+            addRow();
+        }
+    }
+
+    /*if (GM_getValue("wp", false)) {
         window.alert("You already punched the entire week.");
         return false;
     }
 
-    GM_setValue("dp", true);
+    GM_setValue("dp", true);*/
 
-    setStartDate();
-    setMostRecentDate();
 }
 
 /*
@@ -189,12 +217,14 @@ function dayPunch() {
 function weekPunch() {
     GM_log("--> weekPunch()");
 
-    if (GM_getValue("dp", false)) {
+    dayPunch(5);
+
+    /*if (GM_getValue("dp", false)) {
         window.alert("Finish out the week using the Day Punch button.");
         return false;
     }
 
-    GM_setValue("wp", true);
+    GM_setValue("wp", true);*/
 }
 
 /*
