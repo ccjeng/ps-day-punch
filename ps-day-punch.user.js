@@ -20,13 +20,17 @@
  */
 
 /*
- * I need this.
+ * It's dirty/bad, but I need it.
+ * You fix it.
  */
 function sleep(s) {
     GM_log("--> sleep()");
 
     var ms = s * 1000;
-    window.setTimeout(function(){ GM_log("    Sleeping for " + ms + " milliseconds"); }, ms);
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while (curDate-date < ms);
 }
 
 /*
