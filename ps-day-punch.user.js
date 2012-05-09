@@ -172,7 +172,9 @@ function dayPunch() {
     }
 
     GM_setValue("dp", true);
-    //var punchForm = getPunchForm();
+
+    setStartDate();
+    setMostRecentDate();
 }
 
 /*
