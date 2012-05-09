@@ -216,18 +216,31 @@ try {
         GM_log("    We're on the punch page");
         GM_setValue("dp", false);
         GM_setValue("wp", false);
-        window.addEventListener("load", addControls, false);
-        //window.setInterval(whatChanged, 2500);
-        //addControls();
+
+        /*
+         * We're using the new (as of 05/09/2012) Mutation
+         * Observers functionality to detect changes to the page,
+         * which is what determines whether or not we need to
+         * (re-)add our control buttons. Currently it just looks
+         * for *any* mutations, but making things more precise would
+         * probably be a good idea.
+         * 
+         * Also as of this writing, mutation observers are not
+         * supported in Firefox, but are slated to be in version 14.
+         * Somehow I doubt I'll be finished before then.
+         */
         var insertedNodes = [];
         var observer = new WebKitMutationObserver(function(mutations) {
          mutations.forEach(function(mutation) {
            for (var i = 0; i < mutation.addedNodes.length; i++)
              insertedNodes.push(mutation.addedNodes[i]);
-           console.log(insertedNodes);
+           //console.log(insertedNodes);
+           if (insertedNodes.length > 0)
+               addControls();
          });
         });
         observer.observe(document.body, { childList: true, subtree: true });
+
     }
 } catch (e) {
     GM_log("Exception caught: " + e);
