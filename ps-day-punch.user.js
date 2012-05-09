@@ -216,7 +216,17 @@ try {
         GM_log("    We're on the punch page");
         GM_setValue("dp", false);
         GM_setValue("wp", false);
-        addControls();
+        window.addEventListener("load", addControls, false);
+        //addControls();
+        var insertedNodes = [];
+        var observer = new WebKitMutationObserver(function(mutations) {
+         mutations.forEach(function(mutation) {
+           for (var i = 0; i < mutation.addedNodes.length; i++)
+             insertedNodes.push(mutation.addedNodes[i]);
+         });
+        });
+        observer.observe(document, { childList: true });
+        console.log(insertedNodes);
     }
 } catch (e) {
     GM_log("Exception caught: " + e);
