@@ -216,10 +216,11 @@ function whatChanged() {
      mutations.forEach(function(mutation) {
        for (var i = 0; i < mutation.addedNodes.length; i++)
          insertedNodes.push(mutation.addedNodes[i]);
+       console.log(insertedNodes);
      });
     });
-    observer.observe(document, { childList: true, subtree: true });
-    console.log(insertedNodes);
+    observer.observe(document.body, { childList: true, subtree: true });
+
 }
 
 try {
