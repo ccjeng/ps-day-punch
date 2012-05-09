@@ -219,7 +219,8 @@ function whatChanged () {
      });
     });
     observer.observe(document, { childList: true });
-    console.log(insertedNodes);
+    //console.log(insertedNodes);
+    GM_log(insertedNodes);
 }
 
 try {
@@ -229,7 +230,7 @@ try {
         GM_setValue("dp", false);
         GM_setValue("wp", false);
         window.addEventListener("load", addControls, false);
-        window.setInterval("whatChanged()", 5000);
+        window.setInterval(whatChanged(), 500);
         //addControls();
 
     }
