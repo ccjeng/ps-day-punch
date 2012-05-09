@@ -157,9 +157,10 @@ function setMostRecentDate() {
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
         var theId = mostRecentPunchRow.id;
-        var theUnderscore = theId.indexOf("_");
-        var theNumber = theId.substring(theUnderscore + 3);
-        GM_log(theNumber);
+        var theStart = theId.indexOf("row");
+        var theNumber = theId.substring(theStart + 3);
+        var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
+        GM_log(mostRecentDateElement.value);
     } else {
         GM_setValue("mostRecentDate", null);
     }
