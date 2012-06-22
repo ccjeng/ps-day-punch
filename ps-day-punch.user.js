@@ -247,7 +247,7 @@ function dayPunch(days) {
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
     oFormObject.elements["PUNCH_DATE$" + getMostRecentPunchNum()].value = thisPunchDate;
-    oFormObject.elements["DERIVED_TL_PUNCH_TIME$0"].value = "8a";
+    oFormObject.elements["DERIVED_TL_PNCH_PUNCH_TIME$0"].value = "8a";
     GM_log(thisPunchDate);
     var d = new Date(thisPunchDate);
     GM_log(d.getDay());
