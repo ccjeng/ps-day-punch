@@ -193,12 +193,12 @@ function setMostRecentDate() {
     var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
 
     if (mostRecentPunchDate) {
-        GM_setValue("mostRecentDate", mostRecentPunchDate);
+        //GM_setValue("mostRecentDate", mostRecentPunchDate);
     } else if (firstPunchDayVal) {
-        GM_setValue("mostRecentDate", firstPunchDayVal);
+        //GM_setValue("mostRecentDate", firstPunchDayVal);
     } else {
         var mostRecentDate = GM_getValue("startDate");
-        GM_setValue("mostRecentDate", mostRecentDate);
+        //GM_setValue("mostRecentDate", mostRecentDate);
     }
 }
 
