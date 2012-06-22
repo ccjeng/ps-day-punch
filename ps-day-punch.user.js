@@ -194,18 +194,20 @@ function addRow() {
 }
 
 /*
- * Punch in time for a single day.
+ * Punch in time for day(s).
  */
 function dayPunch(days) {
     GM_log("--> dayPunch()");
 
     days = typeof days != undefined ? days : 1;
 
+    var sched = JSON.parse(GM_getValue("schedule", false));
+
     var observer = new WebKitMutationObserver(function(mutations) {
      mutations.forEach(function(mutation) {
        for (var i = 0; i < mutation.addedNodes.length; i++) {
            if (mutation.addedNodes[i].id == "ACE_width") {
-               if (days > 1) {
+               if (days > 0) {
                    setStartDate();
                    setMostRecentDate();
                    addRow();
@@ -222,6 +224,8 @@ function dayPunch(days) {
 
     setStartDate();
     setMostRecentDate();
+    thisPunch = GM_getValue("mostRecentDate", false);
+    GM_log(thisPunch);
     addRow();
     days -= 1;
 
