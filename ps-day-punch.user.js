@@ -23,15 +23,15 @@
  * It's dirty/bad, but I need it.
  * You fix it.
  */
-function sleep(s) {
-    GM_log("--> sleep()");
-
-    var ms = s * 1000;
-    var date = new Date();
-    var curDate = null;
-    do { curDate = new Date(); }
-    while (curDate-date < ms);
-}
+//function sleep(s) {
+//    GM_log("--> sleep()");
+//
+//    var ms = s * 1000;
+//    var date = new Date();
+//    var curDate = null;
+//    do { curDate = new Date(); }
+//    while (curDate-date < ms);
+//}
 
 /*
  * There's a lot of AJAX in PeopleSoft, therefore
@@ -189,7 +189,7 @@ function addRow() {
 
     var addPunch = document.getElementById("TL_LINK_WRK_TL_ADD_PB");
     addPunch.click();
-    sleep(2);
+    //sleep(2);
 }
 
 /*
@@ -200,13 +200,37 @@ function dayPunch(days) {
 
     days = typeof days != undefined ? days : 1;
 
-    for (var i = 0; i < days; i++) {
-        for (var j = 0; j < 4; j++) {
-            setStartDate();
-            setMostRecentDate();
-            addRow();
-        }
-    }
+
+
+    var observer = new WebKitMutationObserver(function(mutations) {
+     mutations.forEach(function(mutation) {
+       for (var i = 0; i < mutation.addedNodes.length; i++) {
+           if (mutation.addedNodes[i].id == "ACE_width") {
+               if (days != 1) {
+                   setStartDate();
+                   setMostRecentDate();
+                   addRow();
+                   days -= 1;
+                   break;
+               }
+           }
+       }
+     });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setStartDate();
+    setMostRecentDate();
+    addRow();
+    days -= 1;
+
+//    for (var i = 0; i < days; i++) {
+//        for (var j = 0; j < 4; j++) {
+//            setStartDate();
+//            setMostRecentDate();
+//            addRow();
+//        }
+//    }
 
     /*if (GM_getValue("wp", false)) {
         window.alert("You already punched the entire week.");
@@ -304,7 +328,7 @@ try {
          * 
          * Somehow I doubt I'll be finished before then.
          */
-        var insertedNodes = [];
+        //var insertedNodes = [];
         var observer = new WebKitMutationObserver(function(mutations) {
          mutations.forEach(function(mutation) {
            for (var i = 0; i < mutation.addedNodes.length; i++) {
