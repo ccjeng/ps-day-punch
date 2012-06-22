@@ -174,7 +174,7 @@ function getMostRecentPunchNum() {
         var theNumber = theId.substring(theStart + 3);
         theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
         //var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-        return theNumber;
+        return string(theNumber);
     } else {
         window.alert("No punch rows could be found. I'm not sure what's going to happen now.");
     }
@@ -187,7 +187,7 @@ function getMostRecentPunchNum() {
 function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
-    //var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum());
+    var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum());
     var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
 
     if (mostRecentPunchDate) {
