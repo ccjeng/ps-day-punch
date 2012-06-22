@@ -174,7 +174,7 @@ function getMostRecentPunchNum() {
         var theNumber = theId.substring(theStart + 3);
         theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
         //var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-        return string(theNumber);
+        return String(theNumber);
     } else {
         window.alert("No punch rows could be found. I'm not sure what's going to happen now.");
     }
