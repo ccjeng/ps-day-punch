@@ -157,19 +157,12 @@ function setStartDate() {
     //GM_log(startDate.value);
 }
 
-/*
- * When is the most recent date we have
- * punched time for?
- */
-function setMostRecentDate() {
-    GM_log("--> setMostRecentDate()");
+function getMostRecentDateElement() {
+    GM_log("--> getMostRecentDateElement()");
 
     var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
-    var tmpFirstPunchVal = document.getElementById("PUNCH_DATE$0").value;
 
-    if ((typeof tmpFirstPunchRow != undefined) && tmpFirstPunchVal) {
-        GM_log('asdf');
-        GM_log(tmpFirstPunchVal);
+    if (typeof tmpFirstPunchRow != undefined) {
         var punchRowParent = tmpFirstPunchRow.parentNode;
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
@@ -178,11 +171,49 @@ function setMostRecentDate() {
         var theNumber = theId.substring(theStart + 3);
         theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
         var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-        GM_setValue("mostRecentDate", mostRecentDateElement.value);
+        return mostRecentDateElement;
+    } else {
+        window.alert("No punch rows could be found. I'm not sure what's going to happen now.");
+    }
+    
+}
+
+/*
+ * When is the most recent date we have
+ * punched time for?
+ */
+function setMostRecentDate() {
+    GM_log("--> setMostRecentDate()");
+
+    var mostRecentPunchDate = getMostRecentDateElement().value;
+    var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
+
+    if (mostRecentPunchDate) {
+        GM_setValue("mostRecentDate", mostRecentPunchDate);
+    } else if (firstPunchDayVal) {
+        GM_setValue("mostRecentDate", firstPunchDayVal);
     } else {
         var mostRecentDate = GM_getValue("startDate");
         GM_setValue("mostRecentDate", mostRecentDate);
     }
+
+//    var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
+//    var firstPunchDayVal = document.getElementById("PUNCH_DATE$0").value;
+//
+//    if ((typeof tmpFirstPunchRow != undefined) && firstPunchDayVal) {
+//        var punchRowParent = tmpFirstPunchRow.parentNode;
+//        var someRandomWhitespaceApparently = punchRowParent.lastChild;
+//        var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
+//        var theId = mostRecentPunchRow.id;
+//        var theStart = theId.indexOf("row");
+//        var theNumber = theId.substring(theStart + 3);
+//        theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
+//        var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
+//        GM_setValue("mostRecentDate", mostRecentDateElement.value);
+//    } else {
+//        var mostRecentDate = GM_getValue("startDate");
+//        GM_setValue("mostRecentDate", mostRecentDate);
+//    }
 }
 
 /*
@@ -227,8 +258,7 @@ function dayPunch(days) {
 
     setStartDate();
     setMostRecentDate();
-    thisPunch = GM_getValue("mostRecentDate", false);
-    GM_log(thisPunch);
+    thisPunchDate = GM_getValue("mostRecentDate", false);
     addRow();
     days -= 1;
 
