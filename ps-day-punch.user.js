@@ -167,7 +167,7 @@ function setMostRecentDate() {
     var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
     var tmpFirstPunchVal = document.getElementById("PUNCH_DATE$0").value;
 
-    if ((typeof tmpFirstPunchRow != undefined) || tmpFirstPunchVal) {
+    if ((typeof tmpFirstPunchRow != undefined) && tmpFirstPunchVal) {
         GM_log('asdf');
         GM_log(tmpFirstPunchVal);
         var punchRowParent = tmpFirstPunchRow.parentNode;
