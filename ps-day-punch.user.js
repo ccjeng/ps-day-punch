@@ -169,6 +169,7 @@ function setMostRecentDate() {
 
     if ((typeof tmpFirstPunchRow != undefined) || (tmpFirstPunchVal == '')) {
         GM_log('asdf');
+        GM_log(tmpFirstPunchVal);
         var punchRowParent = tmpFirstPunchRow.parentNode;
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
