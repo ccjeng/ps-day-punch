@@ -187,7 +187,7 @@ function getMostRecentPunchNum() {
 function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
-    var fuckit = getMostRecentPunchNum();
+    var fuckit = JSON.stringify(getMostRecentPunchNum());
     var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + fuckit);
     var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
 
