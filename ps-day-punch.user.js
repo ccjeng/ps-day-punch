@@ -157,6 +157,9 @@ function setStartDate() {
     //GM_log(startDate.value);
 }
 
+/*
+ * Find the latest punch row.
+ */
 function getMostRecentDateElement() {
     GM_log("--> getMostRecentDateElement()");
 
@@ -175,7 +178,6 @@ function getMostRecentDateElement() {
     } else {
         window.alert("No punch rows could be found. I'm not sure what's going to happen now.");
     }
-    
 }
 
 /*
@@ -196,24 +198,6 @@ function setMostRecentDate() {
         var mostRecentDate = GM_getValue("startDate");
         GM_setValue("mostRecentDate", mostRecentDate);
     }
-
-//    var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
-//    var firstPunchDayVal = document.getElementById("PUNCH_DATE$0").value;
-//
-//    if ((typeof tmpFirstPunchRow != undefined) && firstPunchDayVal) {
-//        var punchRowParent = tmpFirstPunchRow.parentNode;
-//        var someRandomWhitespaceApparently = punchRowParent.lastChild;
-//        var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
-//        var theId = mostRecentPunchRow.id;
-//        var theStart = theId.indexOf("row");
-//        var theNumber = theId.substring(theStart + 3);
-//        theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
-//        var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-//        GM_setValue("mostRecentDate", mostRecentDateElement.value);
-//    } else {
-//        var mostRecentDate = GM_getValue("startDate");
-//        GM_setValue("mostRecentDate", mostRecentDate);
-//    }
 }
 
 /*
@@ -260,24 +244,10 @@ function dayPunch(days) {
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
     GM_log(thisPunchDate);
+    var d = new Date(thisPunchDate);
+    GM_log(d.getDay());
     addRow();
     days -= 1;
-
-//    for (var i = 0; i < days; i++) {
-//        for (var j = 0; j < 4; j++) {
-//            setStartDate();
-//            setMostRecentDate();
-//            addRow();
-//        }
-//    }
-
-    /*if (GM_getValue("wp", false)) {
-        window.alert("You already punched the entire week.");
-        return false;
-    }
-
-    GM_setValue("dp", true);*/
-
 }
 
 /*
@@ -286,14 +256,8 @@ function dayPunch(days) {
 function weekPunch() {
     GM_log("--> weekPunch()");
 
-    dayPunch(5);
-
-    /*if (GM_getValue("dp", false)) {
-        window.alert("Finish out the week using the Day Punch button.");
-        return false;
-    }
-
-    GM_setValue("wp", true);*/
+    window.alert("Not implemented.");
+    //dayPunch(5);
 }
 
 /*
