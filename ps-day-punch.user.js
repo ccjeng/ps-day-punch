@@ -161,7 +161,7 @@ function setStartDate() {
  * Find the latest punch row number.
  */
 function getMostRecentPunchNum() {
-    GM_log("--> getMostRecentDateElement()");
+    GM_log("--> getMostRecentPunchNum()");
 
     var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
 
