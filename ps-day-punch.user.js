@@ -174,7 +174,6 @@ function getMostRecentPunchNum() {
         var theNumber = theId.substring(theStart + 3);
         theNumber = theNumber - 1; // PUNCH_DATE$ fields start with 0
         //var mostRecentDateElement = document.getElementById("PUNCH_DATE$" + theNumber);
-        GM_log(theNumber);
         return theNumber;
     } else {
         window.alert("No punch rows could be found. I'm not sure what's going to happen now.");
@@ -188,19 +187,15 @@ function getMostRecentPunchNum() {
 function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
-    var fuckit = JSON.stringify(getMostRecentPunchNum());
-    var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + fuckit).value;
+    var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum()).value;
     var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
 
     if (mostRecentPunchDate) {
-        GM_log(mostRecentPunchDate);
         GM_setValue("mostRecentDate", mostRecentPunchDate);
     } else if (firstPunchDayVal) {
-        GM_log(firstPunchDayVal);
         GM_setValue("mostRecentDate", firstPunchDayVal);
     } else {
         var mostRecentDate = GM_getValue("startDate");
-        GM_log(mostRecentDate);
         GM_setValue("mostRecentDate", mostRecentDate);
     }
 }
@@ -252,11 +247,10 @@ function dayPunch(days) {
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
     //document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum()).value = "asdf";
-    //oFormObject.elements["PUNCH_DATE$" + getMostRecentPunchNum()].value = 'Some Value';
-    
-    //GM_log(thisPunchDate);
-    //var d = new Date(thisPunchDate);
-    //GM_log(d.getDay());
+    oFormObject.elements["PUNCH_DATE$" + getMostRecentPunchNum()].value = 'Some Value';
+    GM_log(thisPunchDate);
+    var d = new Date(thisPunchDate);
+    GM_log(d.getDay());
     addRow();
     days -= 1;
 }
