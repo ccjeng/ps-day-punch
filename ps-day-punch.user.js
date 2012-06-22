@@ -187,7 +187,7 @@ function getMostRecentPunchNum() {
 function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
-    var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum());
+    //var mostRecentPunchDate = document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum());
     var firstPunchDayVal    = document.getElementById("PUNCH_DATE$0").value;
 
     if (mostRecentPunchDate) {
