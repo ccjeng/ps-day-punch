@@ -243,7 +243,7 @@ function dayPunch(days) {
     setStartDate();
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
-    document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum()).value = "asdf";
+    //document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum()).value = "asdf";
     
     GM_log(thisPunchDate);
     var d = new Date(thisPunchDate);
