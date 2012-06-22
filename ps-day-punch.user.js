@@ -20,20 +20,6 @@
  */
 
 /*
- * It's dirty/bad, but I need it.
- * You fix it.
- */
-//function sleep(s) {
-//    GM_log("--> sleep()");
-//
-//    var ms = s * 1000;
-//    var date = new Date();
-//    var curDate = null;
-//    do { curDate = new Date(); }
-//    while (curDate-date < ms);
-//}
-
-/*
  * There's a lot of AJAX in PeopleSoft, therefore
  * URLs are not dependable. This checks for an element
  * only present on the day punch page.
@@ -241,7 +227,6 @@ function dayPunch(days) {
 //    observer.observe(document.body, { childList: true, subtree: true });
 
     oFormObject = document.forms['win0'];
-
 
     setStartDate();
     setMostRecentDate();
