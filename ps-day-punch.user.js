@@ -165,9 +165,9 @@ function setMostRecentDate() {
     GM_log("--> setMostRecentDate()");
 
     var tmpFirstPunchRow = document.getElementById("trTL_RPTD_PCHTIME$0_row1");
+    var tmpFirstPunchVal = document.getElementById("PUNCH_DATE$0").value;
 
-    if ((typeof tmpFirstPunchRow != undefined) || (tmpFirstPunchRow.value != '')) {
-        GM_log('this is happening');
+    if ((typeof tmpFirstPunchRow != undefined) || (tmpFirstPunchVal == '')) {
         var punchRowParent = tmpFirstPunchRow.parentNode;
         var someRandomWhitespaceApparently = punchRowParent.lastChild;
         var mostRecentPunchRow = someRandomWhitespaceApparently.previousSibling;
