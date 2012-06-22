@@ -154,6 +154,7 @@ function setStartDate() {
 
     var startDate = document.getElementById("DERIVED_TL_TRTM_START_DT");
     GM_setValue("startDate", startDate.value);
+    GM_log(startDate.value);
 }
 
 /*
