@@ -259,6 +259,7 @@ function dayPunch(days) {
     setStartDate();
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
+    GM_log(thisPunchDate);
     addRow();
     days -= 1;
 
