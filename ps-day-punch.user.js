@@ -247,7 +247,7 @@ function dayPunch(days) {
     setMostRecentDate();
     thisPunchDate = GM_getValue("mostRecentDate", false);
     //document.getElementById("PUNCH_DATE$" + getMostRecentPunchNum()).value = "asdf";
-    oFormObject.elements["PUNCH_DATE$" + getMostRecentPunchNum()].value = 'Some Value';
+    //oFormObject.elements["PUNCH_DATE$" + getMostRecentPunchNum()].value = 'Some Value';
     
     //GM_log(thisPunchDate);
     //var d = new Date(thisPunchDate);
