@@ -154,7 +154,7 @@ function setStartDate() {
 
     var startDate = document.getElementById("DERIVED_TL_TRTM_START_DT");
     GM_setValue("startDate", startDate.value);
-    GM_log(startDate.value);
+    //GM_log(startDate.value);
 }
 
 /*
@@ -201,22 +201,24 @@ function dayPunch(days) {
 
     days = typeof days != undefined ? days : 1;
 
-//    var observer = new WebKitMutationObserver(function(mutations) {
-//     mutations.forEach(function(mutation) {
-//       for (var i = 0; i < mutation.addedNodes.length; i++) {
-//           if (mutation.addedNodes[i].id == "ACE_width") {
-//               if (days != 1) {
-//                   setStartDate();
-//                   setMostRecentDate();
-//                   addRow();
-//                   days -= 1;
-//                   break;
-//               }
-//           }
-//       }
-//     });
-//    });
-//    observer.observe(document.body, { childList: true, subtree: true });
+    var observer = new WebKitMutationObserver(function(mutations) {
+     mutations.forEach(function(mutation) {
+       for (var i = 0; i < mutation.addedNodes.length; i++) {
+           if (mutation.addedNodes[i].id == "ACE_width") {
+               if (days > 1) {
+                   setStartDate();
+                   setMostRecentDate();
+                   addRow();
+                   days -= 1;
+                   break;
+               } else {
+                   return;
+               }
+           }
+       }
+     });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     setStartDate();
     setMostRecentDate();
